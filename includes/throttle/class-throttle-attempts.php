@@ -52,8 +52,7 @@ class Password_Protected_Throttle_Attempts {
 
         $this->now              = current_time( 'timestamp' );
 
-        //TODO fix ip
-        $this->ip               = '123';//md5( Password_Protected_Helpers::password_protected_get_client_ip() );
+        $this->ip               = $this->password_protected_get_client_ip();
 
         $this->attempts_allowed = ( int ) $attempts_allowed;
 
@@ -69,6 +68,30 @@ class Password_Protected_Throttle_Attempts {
 
         add_filter( 'password_protected_throttling_error_messages', array( $this, 'password_protected_hide_default_error' ) );
         
+    }
+    
+    public function password_protected_get_client_ip() {
+        $ipaddress = '';
+
+        if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) )
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) )
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if( isset( $_SERVER['HTTP_X_FORWARDED'] ) )
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) )
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if( isset( $_SERVER['HTTP_FORWARDED'] ) )
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if( isset( $_SERVER['REMOTE_ADDR'] ) )
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else
+            $ipaddress = 'UNKNOWN';
+
+        if($ipaddress=='::1')
+            $ipaddress = '127.0.1.6';
+
+        return $ipaddress;
     }
     
     /**
