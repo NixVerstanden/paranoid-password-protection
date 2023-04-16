@@ -543,7 +543,7 @@ class Password_Protected_Admin {
 	public function plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
 
 		if ( 'password-protected/password-protected.php' == $plugin_file ) {
-			$plugin_meta[] = sprintf( '<a href="%s">%s</a>', __( 'https://github.com/NixVerstanden/paranoid-password-protection/', 'paranoid-password-protection' ), __( 'GitHub', 'password-protected' ) );
+			$plugin_meta[] = sprintf( '<a href="%s">%s</a>', 'https://github.com/NixVerstanden/paranoid-password-protection/', __( 'GitHub', 'password-protected' ) );
 		}
 
 		return $plugin_meta;
