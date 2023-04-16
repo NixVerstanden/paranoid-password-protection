@@ -17,6 +17,7 @@ class Password_Protected_Admin {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'password_protected_help_tabs', array( $this, 'help_tabs' ), 5 );
 		add_action( 'admin_notices', array( $this, 'password_protected_admin_notices' ) );
+		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 4 );
 		add_filter( 'plugin_action_links_password-protected/password-protected.php', array( $this, 'plugin_action_links' ) );
 		add_filter( 'pre_update_option_password_protected_password', array( $this, 'pre_update_option_password_protected_password' ), 10, 2 );
                 add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
@@ -525,6 +526,27 @@ class Password_Protected_Admin {
 		}
 
 		return $newvalue;
+
+	}
+
+	/**
+	 * Plugin Row Meta
+	 *
+	 * Adds GitHub link below the plugin description on the plugins page.
+	 *
+	 * @param   array   $plugin_meta  Plugin meta display array.
+	 * @param   string  $plugin_file  Plugin reference.
+	 * @param   array   $plugin_data  Plugin data.
+	 * @param   string  $status       Plugin status.
+	 * @return  array                 Plugin meta array.
+	 */
+	public function plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
+
+		if ( 'password-protected/password-protected.php' == $plugin_file ) {
+			$plugin_meta[] = sprintf( '<a href="%s">%s</a>', __( 'https://github.com/NixVerstanden/paranoid-password-protection/', 'paranoid-password-protection' ), __( 'GitHub', 'password-protected' ) );
+		}
+
+		return $plugin_meta;
 
 	}
 
