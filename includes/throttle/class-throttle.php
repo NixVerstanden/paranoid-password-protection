@@ -48,7 +48,7 @@ class Password_Protected_Throttle {
     public static function remove_old_items() {
         global $wpdb;
         $table_name = $wpdb->prefix . self::$table;
-        $sql = "DELETE FROM " . $table_name . " WHERE attempt_at < TIMESTAMPADD(DAY, -14, NOW());";
+        $sql = "DELETE FROM " . $table_name . " WHERE attempt_at < UNIX_TIMESTAMP(DATE_SUB(NOW(), INTERVAL 14 DAY));";
         $wpdb->query( $sql );
     }
         
