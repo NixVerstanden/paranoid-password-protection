@@ -449,7 +449,7 @@ class Password_Protected {
 	public function get_site_id() {
 
 		global $blog_id;
-		return 'bid_' . apply_filters( 'password_protected_blog_id', $blog_id );
+		return 'bid_' . apply_filters( 'paraniod_password_protection_blog_id', $blog_id );
 
 	}
 
