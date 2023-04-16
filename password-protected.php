@@ -385,8 +385,10 @@ class Password_Protected {
 	 * @return  boolean
 	 */
 	public function is_user_logged_in() {
-
-		return $this->is_active() && $this->validate_auth_cookie();
+            
+                $is_logged_in = $this->is_active() && $this->validate_auth_cookie();
+                $GLOBALS['ppp_is_logged_in'] = $is_logged_in;
+		return $is_logged_in;
 
 	}
 
