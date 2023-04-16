@@ -1,12 +1,12 @@
 <?php
 /*
-Plugin Name: Password Protected
-Plugin URI: https://wordpress.org/plugins/password-protected/
-Description: A very simple way to quickly password protect your WordPress site with a single password. Please note: This plugin does not restrict access to uploaded files and images and does not work with some caching setups.
-Version: 2.6.0
-Author: WPExperts
-Text Domain: password-protected
-Author URI: https://wpexperts.io/
+Plugin Name: Paranoid Password Protection
+Plugin URI: https://github.com/NixVerstanden/paranoid-password-protection
+Description: Make your Wordpress completely private
+Version: 1.0.0
+Author: NixVerstanden
+Text Domain: paranoid-password-protection
+Author URI: https://github.com/NixVerstanden
 License: GPLv2
 */
 /*
@@ -38,7 +38,7 @@ $Password_Protected = new Password_Protected();
 
 class Password_Protected {
 
-	var $version = '2.6.0';
+	var $version = '1.0.0';
 	var $admin   = null;
 	var $errors  = null;
 
