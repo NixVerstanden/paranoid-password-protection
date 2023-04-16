@@ -10,6 +10,9 @@ class Password_Protected_Admin {
 	 * Constructor
 	 */
 	public function __construct() {
+                include_once PASSWORD_PROTECTED_DIR.'/includes/activity-logs/class-activity-logs-table.php';
+                include_once PASSWORD_PROTECTED_DIR.'/includes/activity-logs/class-activity-logs.php';
+            
 		global $wp_version;
 		add_action( 'admin_init', array( $this, 'password_protected_register_setting_tabs' ) );
 		add_action( 'admin_init', array( $this, 'password_protected_settings' ), 5 );
@@ -21,8 +24,87 @@ class Password_Protected_Admin {
 		add_filter( 'plugin_action_links_password-protected/password-protected.php', array( $this, 'plugin_action_links' ) );
 		add_filter( 'pre_update_option_password_protected_password', array( $this, 'pre_update_option_password_protected_password' ), 10, 2 );
                 add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-	}
+                
+                add_action( 'admin_head', array( $this, 'password_protected_inline_style' ) );
+                add_filter( 'password_protected_setting_tabs', array( $this, 'password_protected_pro_settings_tabs' ) );
+                
+                
+                
+                add_action( 'load-settings_page_password-protected', array( $this, 'password_protected_activity_log_add_screen_option' ), 10 );
+                add_action( 'load-toplevel_page_password-protected', array( $this, 'password_protected_activity_log_add_screen_option' ), 10 );
+                add_action( 'password_protected_tab_activity_logs_content', array( $this, 'password_protected_activity_logs_tab' ) );
+        
+        
+        }
 
+        /**
+        * password_protected_inline_style
+        *
+        * @return void
+        */
+       public function password_protected_inline_style() {
+           $page   = ( isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : NULL);
+           $tab    = ( isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : NULL);
+           if( isset( $page ) && $page == 'password-protected' && isset( $tab ) && ( $tab == 'activity_logs' || $tab == 'manage_passwords' ) ) {
+               ?><style>
+               .wrap-row {
+                   margin-top: 30px;
+               }</style><?php
+           }
+
+       }
+        /**
+        * Method password_protected_pro_settings_tabs
+        *
+        * @param $tabs $tabs
+        *
+        * @return void
+        */
+       public function password_protected_pro_settings_tabs( $tabs ) {
+           $new = array(
+                    'activity_logs'      => __( 'Activity Logs', 'password-protected-pro' )
+           );
+
+           return $tabs + $new;
+       }
+       
+        /**
+        * password_protected_activity_log_add_screen_option
+        *
+        * @return void
+        */
+       public function password_protected_activity_log_add_screen_option() {
+           if( isset( $_GET['page'] ) && sanitize_text_field( $_GET['page'] ) == 'password-protected' && isset( $_GET['tab'] ) && sanitize_text_field( $_GET['tab'] ) == 'activity_logs' ) {
+               Password_Protected_Activity_Logs_Table::add_screen_option();
+           }
+       }
+       
+        /**
+        * password_protected_activity_logs_tab
+        *
+        * @return void
+        */
+       public function password_protected_activity_logs_tab() {
+           Password_Protected_Activity_Logs_Table::password_protected_display_activity_logs_table();
+       }
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
 	/**
 	 * Password protected setting tabs
 	 * customizable using filter hook

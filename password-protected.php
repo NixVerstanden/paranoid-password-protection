@@ -726,7 +726,28 @@ class Password_Protected {
 		}
 
 		update_option( 'password_protected_version', $this->version );
+                
+                
+                global $wpdb;
+        
+                $table_name['activity_logs']    = $wpdb->prefix . 'pp_activity_logs';
+//                $table_name['manage_passwords'] = $wpdb->prefix . 'pp_manage_passwords';
+//                $table_name['limit_password']   = $wpdb->prefix . 'pp_limit_password';
 
+                $charset_collate = $wpdb->get_charset_collate();
+
+                require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+//                require_once plugin_dir_path( __FILE__ ) . "includes/helpers/class-helpers.php";
+
+                $schema = require_once plugin_dir_path( __FILE__ ) . 'includes/schema/password-protected-schema.php';
+
+                foreach( $table_name as $index => $table ) {
+
+                    $sql = "CREATE TABLE $table ( $schema[$index] ) $charset_collate;";
+
+                    maybe_create_table( $table, $sql );
+
+                }
 	}
 
 	/**
@@ -891,5 +912,6 @@ class Password_Protected {
 		if( !empty($text) )
 			echo '<div class="password-protected-text-below">' . esc_attr( $text ) . '</div>'; 
 	}
-
 }
+
+
