@@ -47,6 +47,7 @@ class Password_Protected {
 	 */
 	public function __construct() {
 
+                $this->load_required_deps();
 		$this->errors = new WP_Error();
 
 		register_activation_hook( __FILE__, array( &$this, 'install' ) );
@@ -984,6 +985,38 @@ class Password_Protected {
 
             return $ipaddress;
         }
- }
+ 
+        /**
+        * Method load_required_deps
+        *
+        * @return void
+        */
+       public function load_required_deps() {
+
+           $limit_passwords_attempt = get_option( 'limit_passwords_attempt' );
+           $password_attempt_lockdown_time = get_option( 'password_attempt_lockdown_time' );
+////            require_once plugin_dir_path( __FILE__ ) . "includes/freemius.php";
+//
+//                    require_once plugin_dir_path( __FILE__ ) . "includes/helpers/class-helpers.php";
+//
+//                    include_once PASSWORD_PROTECTED_DIR.'includes/activity-logs/class-activity-logs.php' );
+////                    Password_Protected_Helpers::password_protected_pro_get_paths( 'path', 'includes/passwords/class-manage-passwords.php' );
+////                    Password_Protected_Helpers::password_protected_pro_get_paths( 'path', 'includes/password-protected-page.php' );
+//
+                    if( isset( $limit_passwords_attempt )
+                        && (int) $limit_passwords_attempt > 0 ) {
+                            include_once PASSWORD_PROTECTED_DIR.'includes/throttle/class-throttle.php';
+                            include_once PASSWORD_PROTECTED_DIR.'includes/throttle/class-throttle-attempts.php';
+                            new Password_Protected_Throttle_Attempts( $limit_passwords_attempt, $password_attempt_lockdown_time );
+                    }
+//
+                    if( !is_admin() )
+                        return;
+
+//                    Password_Protected_Helpers::password_protected_pro_get_paths( 'path', 'includes/admin/class-admin.php' );
+//                    Password_Protected_Helpers::password_protected_pro_get_paths( 'path', 'includes/activity-logs/class-activity-logs-table.php' );
+//                    Password_Protected_Helpers::password_protected_pro_get_paths( 'path', 'includes/passwords/class-manage-passwords-table.php' );
+       }
+}
 
 

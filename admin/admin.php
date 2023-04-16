@@ -384,6 +384,22 @@ class Password_Protected_Admin {
 			'password-protected&tab=advanced',
 			'password-protected-advanced-tab'
 		);
+                
+                add_settings_field(
+			'password-protected-limit-password-attempts',
+			__( 'No of Attempts ', 'password-protected' ),
+			array(  $this, 'limit_passwords_attempt' ),
+			'password-protected&tab=advanced',
+			'password-protected-advanced-tab'
+		);
+
+                add_settings_field(
+			'password-protected-site-lockdown-time',
+			__( 'Lockdown Time In Minutes:', 'password-protected' ),
+			array(  $this, 'password_attempt_lockdown_time' ),
+			'password-protected&tab=advanced',
+			'password-protected-advanced-tab'
+		);
 
 		// password protected help tab
 		add_settings_section(
@@ -405,7 +421,8 @@ class Password_Protected_Admin {
 		register_setting( $this->options_group, 'password_protected_remember_me_lifetime', 'intval' );
 		register_setting( $this->options_group.'-advanced', 'password_protected_text_above_password', array( 'type' => 'string' ) );
 		register_setting( $this->options_group.'-advanced', 'password_protected_text_below_password', array( 'type' => 'string' ) );
-
+                register_setting( $this->options_group.'-advanced', 'limit_passwords_attempt', 'intval' );
+                register_setting( $this->options_group.'-advanced', 'password_attempt_lockdown_time', 'intval' );
 	}
 
 	/**
@@ -759,4 +776,22 @@ class Password_Protected_Admin {
 		return class_exists( 'Password_Protected_Pro' );
 	}
 
+    
+        
+        /**
+        * Method limit_passwords_attempt
+        *
+        * @return void
+        */
+       public function limit_passwords_attempt() {
+           $saved = get_option('limit_passwords_attempt');
+           echo '<input type="number" name="limit_passwords_attempt" id="limit_passwords_attempt" class="regular-text" placeholder="Limit Password Attempts" min="1" value="'. $saved .'">';
+           echo '<p class="description">' . __( 'Leave blank to disable limit password attempts.', 'password-protected-pro' ) . '</p>';
+       }
+
+       public function password_attempt_lockdown_time() {
+           $saved = get_option('password_attempt_lockdown_time');
+           echo '<input type="number" min="1" name="password_attempt_lockdown_time" id="password_attempt_lockdown_time" class="regular-text" placeholder="Lockdown Time" value="'. $saved .'">';
+           echo '<p class="description">If not specified, the default time will be (10 minutes).</p>';
+       }
 }
