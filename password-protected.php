@@ -71,6 +71,10 @@ class Password_Protected {
 		add_action('password_protected_above_password_field', array( $this, 'password_protected_above_password_field' ));
 		add_action('password_protected_below_password_field', array( $this, 'password_protected_below_password_field' ));
 
+                add_action( 'password_protected_success_login_attempt', array( $this, 'password_protected_insert_success_login_attempt_log' ), 10 );
+                add_action( 'password_protected_failure_login_attempt', array( $this, 'password_protected_insert_failure_login_attempt_log' ), 10 );
+
+        
 		// Available from WordPress 4.3+
 		if ( function_exists( 'wp_site_icon' ) ) {
 			add_action( 'password_protected_login_head', 'wp_site_icon' );
@@ -912,6 +916,74 @@ class Password_Protected {
 		if( !empty($text) )
 			echo '<div class="password-protected-text-below">' . esc_attr( $text ) . '</div>'; 
 	}
-}
+
+        public function password_protected_insert_success_login_attempt_log() {
+            $this->password_protected_add_log_entry( "Success" );
+        }
+
+        /**
+         * password_protected_insert_failure_login_attempt_log
+         *
+         * @return void
+         */
+        public function password_protected_insert_failure_login_attempt_log() {
+            $this->password_protected_add_log_entry( "Failure" );
+        }
+
+        /**
+         * password_protected_add_log_entry
+         *
+         * @param string $success_or_failure
+         * @return void
+         */
+        public function password_protected_add_log_entry( string $success_or_failure ) {
+
+            $log = $this->prepare_entry_log();
+            extract( $log );
+            
+            include_once PASSWORD_PROTECTED_DIR.'/includes/activity-logs/class-activity-logs.php';
+            
+            Password_Protected_Activity_Logs::add_item(array(
+                'ip'            => $IP,
+                'browser'       => $browser, 
+                'status'        => $success_or_failure,
+                'created_at'    => current_time( "timestamp" )
+            ));
+        }
+        
+        public function prepare_entry_log() {
+      
+            $IP = $this->password_protected_get_client_ip();
+
+            $browser = sanitize_text_field( $_REQUEST['password_protected_user_agent'] );
+            $browser = ( empty( $browser ) ? "UNKNOWN" : $browser );
+
+            return compact( 'IP', 'browser' );
+        }
+        
+        public function password_protected_get_client_ip() {
+            $ipaddress = '';
+
+            if ( isset( $_SERVER['HTTP_CLIENT_IP'] ) )
+                $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+            else if( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) )
+                $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            else if( isset( $_SERVER['HTTP_X_FORWARDED'] ) )
+                $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+            else if( isset( $_SERVER['HTTP_FORWARDED_FOR'] ) )
+                $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+            else if( isset( $_SERVER['HTTP_FORWARDED'] ) )
+                $ipaddress = $_SERVER['HTTP_FORWARDED'];
+            else if( isset( $_SERVER['REMOTE_ADDR'] ) )
+                $ipaddress = $_SERVER['REMOTE_ADDR'];
+            else
+                $ipaddress = 'UNKNOWN';
+
+            if($ipaddress=='::1')
+                $ipaddress = '127.0.1.6';
+
+            return $ipaddress;
+        }
+ }
 
 
