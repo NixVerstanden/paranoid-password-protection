@@ -706,7 +706,7 @@ class Password_Protected {
 		/**
 		 * Filters the cookie name
 		 */
-		return apply_filters( 'password_protected_cookie_name', $this->get_site_id() . '_password_protected_auth', $this );
+		return apply_filters( 'password_protected_cookie_name', $this->get_site_id() . '_paranoid_password_protection_auth', $this );
 
 	}
 
