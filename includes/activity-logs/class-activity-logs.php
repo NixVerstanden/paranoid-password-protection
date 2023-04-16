@@ -86,6 +86,13 @@ class Password_Protected_Activity_Logs {
         return $wpdb->insert( $table_name, $data, $format );
     }
     
+    public static function remove_old_items() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . self::$table;
+        $sql = "DELETE FROM " . $table_name . " WHERE created_at < TIMESTAMPADD(DAY, -14, NOW());";
+        $wpdb->query( $sql );
+    }
+    
     /**
      * delete_item
      *

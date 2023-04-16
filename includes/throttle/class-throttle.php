@@ -44,6 +44,13 @@ class Password_Protected_Throttle {
  
         return $wpdb->insert( $table_name, $request, $format );
     }
+    
+    public static function remove_old_items() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . self::$table;
+        $sql = "DELETE FROM " . $table_name . " WHERE attempt_at < TIMESTAMPADD(DAY, -14, NOW());";
+        $wpdb->query( $sql );
+    }
         
     /**
      * update_item

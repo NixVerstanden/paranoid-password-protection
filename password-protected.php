@@ -733,7 +733,7 @@ class Password_Protected {
         
                 $table_name['activity_logs']    = $wpdb->prefix . 'pp_activity_logs';
 //                $table_name['manage_passwords'] = $wpdb->prefix . 'pp_manage_passwords';
-//                $table_name['limit_password']   = $wpdb->prefix . 'pp_limit_password';
+                $table_name['limit_password']   = $wpdb->prefix . 'pp_limit_password';
 
                 $charset_collate = $wpdb->get_charset_collate();
 
@@ -940,6 +940,7 @@ class Password_Protected {
             
             include_once PASSWORD_PROTECTED_DIR.'/includes/activity-logs/class-activity-logs.php';
             
+            Password_Protected_Activity_Logs::remove_old_items();
             Password_Protected_Activity_Logs::add_item(array(
                 'ip'            => $IP,
                 'browser'       => $browser, 

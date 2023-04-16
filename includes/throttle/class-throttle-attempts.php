@@ -126,6 +126,8 @@ class Password_Protected_Throttle_Attempts {
 
         if( is_null( $this->attempt ) ) {
             $this->set_attempt();
+            
+            Password_Protected_Throttle::remove_old_items();
             Password_Protected_Throttle::add_item( $this->get_attempt() );
         
             if( $this->attempt['password_attempts'] != $this->attempts_allowed ) {
