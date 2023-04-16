@@ -310,16 +310,6 @@ class Password_Protected_Admin {
                         'password-protected-help'
                 );
 		
-		// sidebar login designer compatibity
-		if( !$this->login_designer_is_installed_and_activated() ) {
-			add_settings_section(
-				'password-protected-login-designer',
-				'',
-				array( $this, 'login_designer_message' ),
-				'password-protected-login-designer'
-			);
-		}
-		
 		// registering settings
 		register_setting( $this->options_group, 'password_protected_status', 'intval' );
 		register_setting( $this->options_group, 'password_protected_feeds', 'intval' );
@@ -657,14 +647,6 @@ class Password_Protected_Admin {
 
 	}
 
-	/**
-	 * @return  bool
-	 * true if login designer is installed and activated otherwise false
-	 */
-	public function login_designer_is_installed_and_activated(): bool {
-		return class_exists( 'Login_Designer' );
-	}
-	
 	/**
 	 * @return  bool
 	 * true if password protected pro is installed and activated otherwise false
