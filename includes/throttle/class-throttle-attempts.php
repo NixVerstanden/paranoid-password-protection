@@ -52,6 +52,7 @@ class Password_Protected_Throttle_Attempts {
 
         $this->now              = current_time( 'timestamp' );
 
+        //TODO fix ip
         $this->ip               = '123';//md5( Password_Protected_Helpers::password_protected_get_client_ip() );
 
         $this->attempts_allowed = ( int ) $attempts_allowed;

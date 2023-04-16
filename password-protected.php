@@ -395,12 +395,6 @@ class Password_Protected {
 	 */
 	public function maybe_show_login() {
 
-		if ( class_exists( 'Login_designer' ) ) {
-			if ( is_customize_preview() ) {
-				return 1;
-			}
-		}
-
 		// Filter for adding exceptions.
 		$show_login = apply_filters( 'password_protected_show_login', $this->is_active() );
 		
