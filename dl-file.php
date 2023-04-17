@@ -25,7 +25,7 @@ function process_file_restriction() {
         require_once('wp-load.php');
         get_and_render_file_as_content();
     } else {
-        die();
+        die_of_404();
     }
 }
 
@@ -53,7 +53,8 @@ function is_file_valid($file) {
 }
 
 function die_of_404() {
-    status_header(404);
+    header('HTTP/1.0 404 Not Found', true, 404);
+    echo "\n";
     die();
 }
 
