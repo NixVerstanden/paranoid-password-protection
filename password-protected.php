@@ -147,6 +147,9 @@ class Password_Protected {
 			$is_active = true;
 		}
 
+                session_start();
+                $_SESSION['ppp_is_active'] = $is_active;
+                
 		return $is_active;
 
 	}
@@ -387,7 +390,8 @@ class Password_Protected {
 	public function is_user_logged_in() {
             
                 $is_logged_in = $this->is_active() && $this->validate_auth_cookie();
-                $GLOBALS['ppp_is_logged_in'] = $is_logged_in;
+                session_start();
+                $_SESSION['ppp_is_logged_in'] = $is_logged_in;
 		return $is_logged_in;
 
 	}
@@ -473,7 +477,8 @@ class Password_Protected {
 
 		$this->clear_auth_cookie();
 		do_action( 'password_protected_logout' );
-
+                unset($_SESSION['ppp_is_logged_in']);
+                
 	}
 
 	/**
